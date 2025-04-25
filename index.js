@@ -3,7 +3,7 @@ const app = express();
 
 // Step 1: Send users to Shopify OAuth from backend
 app.get('/start-auth', (req, res) => {
-  const shop = 'ardishops.com';
+  const shop = 'appricot-dev-store2.myshopify.com';
   const clientId = '57c7a1d0f2259185a267e20083963476';
   const redirectUri = 'https://appricot-backend.onrender.com/auth/callback';
   const scopes = 'read_products,read_orders';
@@ -12,6 +12,7 @@ app.get('/start-auth', (req, res) => {
 
   res.redirect(shopifyAuthUrl);
 });
+
 
 
 
