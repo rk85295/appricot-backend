@@ -20,10 +20,13 @@ app.get('/start-auth', (req, res) => {
 app.get('/auth/callback', (req, res) => {
   const { code, shop } = req.query;
 
-  // This deep link sends the auth code back to your mobile app
-  const mobileRedirect = `appricot://auth?code=${code}&shop=${shop}`;
-  res.redirect(mobileRedirect);
+  console.log('✅ CODE:', code);
+  console.log('✅ SHOP:', shop);
+
+  // TEMP: Show it in the browser for debugging
+  res.send(`<h1>Success!</h1><p>Code: ${code}</p><p>Shop: ${shop}</p>`);
 });
+
 
 const PORT = process.env.PORT || 3000;
 
