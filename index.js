@@ -3,16 +3,17 @@ const app = express();
 
 // Step 1: Send users to Shopify OAuth from backend
 app.get('/start-auth', (req, res) => {
-  // You can replace this with dynamic detection later
-  const shop = 'ardishops.com';
   const clientId = '57c7a1d0f2259185a267e20083963476';
   const redirectUri = 'https://appricot-backend.onrender.com/auth/callback';
   const scopes = 'read_products,read_orders';
 
-  const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+  const loginUrl = `https://accounts.shopify.com/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&response_type=code`;
 
-  res.redirect(shopifyAuthUrl);
+  res.redirect(loginUrl);
 });
+
 
 // Step 2: Shopify redirects here after login
 app.get('/auth/callback', (req, res) => {
