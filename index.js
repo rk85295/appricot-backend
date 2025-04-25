@@ -27,7 +27,7 @@ app.get('/auth/callback', (req, res) => {
 
 // ✅ Step 3: Manually test token exchange (temporary route)
 app.get('/auth/token', async (req, res) => {
-  const code = 'a29ae5792f0edb7ce72b62e19d30ff9b'; // your real code
+  const code = '7a4dd8fd8c7e37dac706f919a6964fbe'; // your real code
   const shop = 'appricot-dev-store2.myshopify.com';
   const clientId = '57c7a1d0f2259185a267e20083963476';
   const clientSecret = '35df4943fec361832ced223ae1c63f75'; // ⚠️ replace with real secret
