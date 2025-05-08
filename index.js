@@ -2,10 +2,13 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
+// Shopify App Credentials
+const clientId = '57c7a1d0f2259185a267e20083963476';
+const clientSecret = '35df4943fec361832ced223ae1c63f75'; // ✅ Use your real secret
+
 // Step 1: Start OAuth
 app.get('/start-auth', (req, res) => {
   const shop = 'appricot-dev-store2.myshopify.com';
-  const clientId = '57c7a1d0f2259185a267e20083963476';
   const redirectUri = 'https://appricot-backend.onrender.com/auth/callback';
   const scopes = 'read_products,read_orders';
 
@@ -14,42 +17,36 @@ app.get('/start-auth', (req, res) => {
   res.redirect(shopifyAuthUrl);
 });
 
-// Step 2: Shopify redirects here after login
-app.get('/auth/callback', (req, res) => {
+// ✅ Step 2: Shopify redirects here after login
+app.get('/auth/callback', async (req, res) => {
   const { code, shop } = req.query;
 
-  console.log('✅ CODE:', code);
-  console.log('✅ SHOP:', shop);
-
-  // TEMP: Show it in the browser for debugging
-  res.send(`<h1>Success!</h1><p>Code: ${code}</p><p>Shop: ${shop}</p>`);
-});
-
-// Step 3: Manually test token exchange (temporary route)
-app.get('/auth/token', async (req, res) => {
-  const code = '7a4dd8fd8c7e37dac706f919a6964fbe'; // update with new code if needed
-  const shop = 'appricot-dev-store2.myshopify.com';
-  const clientId = '57c7a1d0f2259185a267e20083963476';
-  const clientSecret = '35df4943fec361832ced223ae1c63f75';
+  if (!code || !shop) {
+    return res.status(400).send('Missing code or shop');
+  }
 
   try {
-    const response = await axios.post(`https://${shop}/admin/oauth/access_token`, {
+    // Exchange the code for an access token
+    const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
       client_id: clientId,
       client_secret: clientSecret,
-      code: code,
+      code,
     });
 
-    console.log('✅ ACCESS TOKEN:', response.data.access_token);
-    res.send(`<h1>Access Token:</h1><p>${response.data.access_token}</p>`);
+    const accessToken = tokenResponse.data.access_token;
+
+    // ✅ Redirect to mobile app with token and shop
+    const mobileRedirect = `appricot://redirect?shop=${shop}&token=${accessToken}`;
+    res.redirect(mobileRedirect);
   } catch (error) {
-    console.error('❌ Token error:', error.response?.data || error.message);
-    res.status(500).send('Token exchange failed');
+    console.error('❌ Error during token exchange:', error.response?.data || error.message);
+    res.status(500).send('Authentication failed');
   }
 });
 
-// ✅ Step 4: Get Shopify products using environment variable token
+// ✅ Optional: Products route (for testing in browser)
 app.get('/shopify/products', async (req, res) => {
-  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN; // no hardcoded token here
+  const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
   const shop = 'appricot-dev-store2.myshopify.com';
 
   if (!accessToken) {
@@ -75,5 +72,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Backend is running on port ${PORT}`);
 });
+
 
 
