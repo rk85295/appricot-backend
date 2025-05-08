@@ -2,11 +2,16 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-// Shopify App Credentials (from your custom app)
+// Shopify App Credentials
 const clientId = '0f69440d80a20368a97c1a9908a7e0e0';
 const clientSecret = '9579fda09212fe4f594ce524570be546';
 
-// Step 1: Start OAuth (triggered by your mobile app)
+// ✅ Health check route (proves backend is responding)
+app.get('/', (req, res) => {
+  res.send('✅ Appricot backend is running and ready.');
+});
+
+// Step 1: Start OAuth
 app.get('/start-auth', (req, res) => {
   const shop = 'appricot-dev-store2.myshopify.com';
   const redirectUri = 'https://appricot-backend.onrender.com/auth/callback';
@@ -22,7 +27,7 @@ app.get('/start-auth', (req, res) => {
 app.get('/auth/callback', async (req, res) => {
   const { code, shop } = req.query;
 
-  console.log('📥 Received callback with:', { code, shop });
+  console.log('📥 Shopify callback received:', { code, shop });
 
   if (!code || !shop) {
     console.warn('❌ Missing code or shop in callback');
@@ -36,22 +41,22 @@ app.get('/auth/callback', async (req, res) => {
       code,
     });
 
-    console.log('✅ Token response from Shopify:', tokenResponse.data);
+    console.log('✅ Token exchange success:', tokenResponse.data);
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Step 3: Redirect to mobile app with token
+    // Redirect to your mobile app with token
     const mobileRedirect = `appricot://redirect?shop=${shop}&token=${accessToken}`;
-    console.log('🚀 Redirecting to app with token:', mobileRedirect);
+    console.log('🚀 Redirecting to mobile app:', mobileRedirect);
     res.redirect(mobileRedirect);
   } catch (error) {
     const errData = error.response?.data || error.message;
-    console.error('❌ Error during token exchange:', errData);
+    console.error('❌ Token exchange error:', errData);
     res.status(500).send(`Authentication failed: ${JSON.stringify(errData)}`);
   }
 });
 
-// Optional: Fetch products using a saved access token (for testing)
+// Optional: Product fetch test
 app.get('/shopify/products', async (req, res) => {
   const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
   const shop = 'appricot-dev-store2.myshopify.com';
@@ -75,11 +80,12 @@ app.get('/shopify/products', async (req, res) => {
   }
 });
 
-// Server
+// Start server on Render-compatible port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Backend is running on port ${PORT}`);
 });
+
 
 
 
