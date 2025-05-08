@@ -46,7 +46,7 @@ app.get('/auth/callback', async (req, res) => {
     const accessToken = tokenResponse.data.access_token;
 
     // Redirect to your mobile app with token
-    const mobileRedirect = `appricot://redirect?shop=${shop}&token=${accessToken}`;
+    const mobileRedirect = `exp://192.168.137.1:8081/--/redirect?shop=${shop}&token=${accessToken}`;
     console.log('🚀 Redirecting to mobile app:', mobileRedirect);
     res.redirect(mobileRedirect);
   } catch (error) {
