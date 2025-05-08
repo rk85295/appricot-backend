@@ -3,8 +3,8 @@ const axios = require('axios');
 const app = express();
 
 // Shopify App Credentials
-const clientId = '0f69440d80a20368a97c1a9908a7e0e0';
-const clientSecret = '9579fda09212fe4f594ce524570be546';
+const clientId = 'f0d4169b15e02a0e09519731ab6d6d20';
+const clientSecret = 'b341216182d707e2c28c27de264e5c86';
 
 // ✅ Health check route (proves backend is responding)
 app.get('/', (req, res) => {
