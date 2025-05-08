@@ -3,8 +3,8 @@ const axios = require('axios');
 const app = express();
 
 // Shopify App Credentials
-const clientId = '57c7a1d0f2259185a267e20083963476';
-const clientSecret = '35df4943fec361832ced223ae1c63f75'; // ✅ Use your real secret
+const clientId = '0f69440d80a20368a97c1a9908a7e0e0';
+const clientSecret = '9579fda09212fe4f594ce524570be546'; // ✅ Use your real secret
 
 // Step 1: Start OAuth
 app.get('/start-auth', (req, res) => {
