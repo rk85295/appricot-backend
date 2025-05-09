@@ -35,11 +35,14 @@ app.get('/auth/callback', async (req, res) => {
   }
 
   try {
-    const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
-      client_id: clientId,
-      client_secret: clientSecret,
-      code,
-    });
+   const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
+  client_id: clientId,
+  client_secret: clientSecret,
+  code,
+}, {
+  headers: { 'Content-Type': 'application/json' } // ✅ Add this
+});
+
 
     console.log('✅ Token exchange success:', tokenResponse.data);
 
