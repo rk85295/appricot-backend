@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const { code, shop, state } = req.query;
 
   if (!code || !shop || !state) {
-    return res.status(400).send('Missing code, shop, or state');
+    return res.status(400).send('Missing required parameters');
   }
 
   try {
@@ -18,11 +18,14 @@ export default async function handler(req, res) {
     });
 
     const accessToken = tokenRes.data.access_token;
-    const deepLink = `${state}?shop=${shop}&token=${accessToken}`;
-    return res.redirect(deepLink);
+    const redirect = `${state}?shop=${shop}&token=${accessToken}`;
+
+    console.log('✅ OAuth Success, redirecting to:', redirect);
+    return res.redirect(redirect);
   } catch (err) {
-    console.error('❌ Token exchange failed:', err.response?.data || err.message);
-    return res.status(500).send('Token exchange failed');
+    console.error('❌ Error exchanging code:', err.response?.data || err.message);
+    return res.status(500).send('OAuth token exchange failed');
   }
 }
+
 
