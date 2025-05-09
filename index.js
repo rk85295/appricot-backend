@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 // Step 1: Start OAuth
 app.get('/start-auth', (req, res) => {
   const shop = 'appricot-dev-store2.myshopify.com';
-  const redirectUri = 'https://appricot-backend.onrender.com/auth/callback';
+  const redirectUri = 'https://appricot-backend-8df3.vercel.app/auth/callback';
   const scopes = 'read_products,read_orders';
 
   const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
@@ -46,7 +46,7 @@ app.get('/auth/callback', async (req, res) => {
     const accessToken = tokenResponse.data.access_token;
 
     // Redirect to your mobile app with token
-    const mobileRedirect = `appricot-backend-8df3.vercel.app${shop}&token=${accessToken}`;
+    const mobileRedirect = `https://appricot-landing.vercel.app/redirect?shop=${shop}&token=${accessToken}`;
     console.log('🚀 Redirecting to mobile app:', mobileRedirect);
     res.redirect(mobileRedirect);
   } catch (error) {
