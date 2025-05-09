@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redirecting...</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>✅ Shopify login successful!</h2>
+    <p>Redirecting to the app...</p>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const shop = params.get("shop");
+      const token = params.get("token");
+
+      if (shop && token) {
+        const redirectURL = `appricot://redirect?shop=${shop}&token=${token}`;
+        window.location.href = redirectURL;
+      } else {
+        document.body.innerHTML =
+          "<h2>❌ Missing token or shop</h2><p>Check the URL and try again.</p>";
+      }
+    </script>
+  </body>
+</html>
