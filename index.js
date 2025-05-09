@@ -27,23 +27,31 @@ app.get('/start-auth', (req, res) => {
 
 // Step 2: Shopify redirects here with ?code=...&shop=...
 app.get('/auth/callback', async (req, res) => {
-  const { code, shop } = req.query;
+  const { code, shop, state } = req.query;
 
-  console.log('📥 Shopify callback received:', { code, shop });
-
-  if (!code || !shop) {
-    console.warn('❌ Missing code or shop in callback');
-    return res.status(400).send('Missing code or shop');
+  if (!code || !shop || !state) {
+    return res.status(400).send('Missing required query params');
   }
 
   try {
-   const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
-  client_id: clientId,
-  client_secret: clientSecret,
-  code,
-}, {
-  headers: { 'Content-Type': 'application/json' } // ✅ Add this
+    const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const accessToken = tokenResponse.data.access_token;
+
+    const mobileRedirect = `${state}?shop=${shop}&token=${accessToken}`;
+    res.redirect(mobileRedirect);
+  } catch (error) {
+    console.error('❌ Token exchange error:', error.response?.data || error.message);
+    res.status(500).send('Token exchange failed');
+  }
 });
+
 
 
     console.log('✅ Token exchange success:', tokenResponse.data);
