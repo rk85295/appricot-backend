@@ -16,12 +16,14 @@ app.get('/start-auth', (req, res) => {
   const shop = 'appricot-dev-store2.myshopify.com';
   const redirectUri = 'https://appricot-backend-8df3.vercel.app/auth/callback';
   const scopes = 'read_products,read_orders';
+  const mobileRedirect = req.query.redirect; // <- comes from app
 
-  const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+  const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(mobileRedirect)}`;
 
   console.log('🔗 Redirecting to Shopify:', shopifyAuthUrl);
   res.redirect(shopifyAuthUrl);
 });
+
 
 // Step 2: Shopify redirects here with ?code=...&shop=...
 app.get('/auth/callback', async (req, res) => {
