@@ -17,7 +17,7 @@ app.get('/start-auth', (req, res) => {
   const redirectUri = 'https://appricot-backend-8df3.vercel.app/auth/callback';
   const scopes = 'read_products,read_orders';
 
-  const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+  const shopifyAuthUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
 
   console.log('🔗 Redirecting to Shopify:', shopifyAuthUrl);
   res.redirect(shopifyAuthUrl);
